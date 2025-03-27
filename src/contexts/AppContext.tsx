@@ -27,10 +27,11 @@ export const useAppContext = () => {
 
 interface AppProviderProps {
   children: ReactNode;
+  defaultLanguage?: Language;
 }
 
-export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>("pt"); // PT como padrão
+export const AppProvider: React.FC<AppProviderProps> = ({ children, defaultLanguage = "pt" }) => {
+  const [language, setLanguage] = useState<Language>(defaultLanguage);
   const [fontSize, setFontSize] = useState(100); // 100% como padrão
   const [theme, setTheme] = useState<Theme>(() => {
     // Verificar preferência do usuário ou usar o tema claro como padrão
@@ -96,13 +97,17 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 export const useTranslation = () => {
   const { language } = useAppContext();
   
-  const t = (section: string, key: string): string => {
+  const t = (section: string, key?: string): string => {
     try {
       const { translations } = require("../utils/translations");
-      return translations[section][key][language] || `[Missing translation: ${section}.${key}.${language}]`;
+      if (key) {
+        return translations[section][key][language] || `[Missing translation: ${section}.${key}.${language}]`;
+      } else {
+        return translations[section][language] || `[Missing translation: ${section}.${language}]`;
+      }
     } catch (error) {
       console.error("Translation error:", error);
-      return `[Error: ${section}.${key}]`;
+      return `[Error: ${section}${key ? `.${key}` : ''}]`;
     }
   };
   
