@@ -1,8 +1,10 @@
 
+interface TranslationItem {
+  [key: string]: string | TranslationItem;
+}
+
 interface Translations {
-  [key: string]: {
-    [key: string]: string;
-  };
+  [key: string]: TranslationItem;
 }
 
 export const translations: Translations = {
@@ -55,4 +57,3 @@ export const translations: Translations = {
     }
   }
 };
-

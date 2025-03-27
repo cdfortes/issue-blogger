@@ -11,9 +11,12 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// Define default language as Portuguese
+const defaultLanguage = "pt";
+
 const App = () => (
   <BrowserRouter>
-    <AppProvider>
+    <AppProvider defaultLanguage={defaultLanguage}>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />

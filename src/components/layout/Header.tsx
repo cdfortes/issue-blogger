@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Moon, Sun, Languages, Type, TypeMinus } from "lucide-react";
+import { Menu, X, Moon, Sun, Languages, Type, MinusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppContext, useTranslation } from "@/contexts/AppContext";
 
@@ -46,7 +46,7 @@ const Header: React.FC = () => {
             to="/" 
             className="font-semibold text-xl tracking-tight transition-opacity hover:opacity-80"
           >
-            {t("header", "pt")}
+            {t("header")}
           </Link>
           
           {/* Desktop controls */}
@@ -68,7 +68,7 @@ const Header: React.FC = () => {
               aria-label="Decrease font size"
               title={language === "pt" ? "Diminuir texto" : "Decrease text size"}
             >
-              <TypeMinus size={20} />
+              <MinusCircle size={20} />
             </Button>
             
             <Button 
@@ -125,7 +125,7 @@ const Header: React.FC = () => {
               onClick={decreaseFontSize}
               aria-label="Decrease font size"
             >
-              <TypeMinus size={20} />
+              <MinusCircle size={20} />
             </Button>
             
             <Button 
