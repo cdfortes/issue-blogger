@@ -4,6 +4,7 @@ import PostCard from "./PostCard";
 import { Button } from "@/components/ui/button";
 import { GitHubIssue, fetchIssues } from "@/services/github";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "@/contexts/AppContext";
 
 interface PostListProps {
   owner?: string;
@@ -17,6 +18,7 @@ const PostList: React.FC<PostListProps> = ({ owner, repo, labels }) => {
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const { t } = useTranslation();
 
   const loadPosts = async (pageNumber: number = 1) => {
     if (pageNumber === 1) {
@@ -36,7 +38,7 @@ const PostList: React.FC<PostListProps> = ({ owner, repo, labels }) => {
       setHasMore(newPosts.length === 10);
       setError(null);
     } catch (err) {
-      setError("Failed to load posts. Please try again later.");
+      setError(t("posts", "error"));
       console.error(err);
     } finally {
       setLoading(false);
@@ -69,7 +71,7 @@ const PostList: React.FC<PostListProps> = ({ owner, repo, labels }) => {
           onClick={() => loadPosts(1)} 
           variant="outline"
         >
-          Try Again
+          {t("posts", "tryAgain")}
         </Button>
       </div>
     );
@@ -78,8 +80,7 @@ const PostList: React.FC<PostListProps> = ({ owner, repo, labels }) => {
   if (posts.length === 0) {
     return (
       <div className="text-center py-20">
-        <p className="text-muted-foreground mb-2">No posts found</p>
-        <p className="text-sm text-muted-foreground">Try changing your search criteria</p>
+        <p className="text-muted-foreground mb-2">{t("posts", "noResults")}</p>
       </div>
     );
   }
@@ -107,10 +108,10 @@ const PostList: React.FC<PostListProps> = ({ owner, repo, labels }) => {
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
-                Loading...
+                {t("posts", "loading")}
               </>
             ) : (
-              'Load More'
+              t("posts", "loadMore")
             )}
           </Button>
         </div>
