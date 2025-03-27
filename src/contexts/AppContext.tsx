@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { translations } from "../utils/translations";
 
 type Theme = "light" | "dark";
 type Language = "pt" | "en";
@@ -99,11 +100,16 @@ export const useTranslation = () => {
   
   const t = (section: string, key?: string): string => {
     try {
-      const { translations } = require("../utils/translations");
       if (key) {
-        return translations[section][key][language] || `[Missing translation: ${section}.${key}.${language}]`;
+        if (translations[section] && translations[section][key] && translations[section][key][language]) {
+          return translations[section][key][language] as string;
+        }
+        return `[Missing translation: ${section}.${key}.${language}]`;
       } else {
-        return translations[section][language] || `[Missing translation: ${section}.${language}]`;
+        if (translations[section] && translations[section][language]) {
+          return translations[section][language] as string;
+        }
+        return `[Missing translation: ${section}.${language}]`;
       }
     } catch (error) {
       console.error("Translation error:", error);
