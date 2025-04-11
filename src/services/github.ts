@@ -34,9 +34,30 @@ export interface GitHubComment {
   };
 }
 
-// Default repository information
-const DEFAULT_OWNER = "facebook";
-const DEFAULT_REPO = "react";
+// Get repository information from environment or use current repository owner
+// This will fetch issues from the same repository where this code lives
+export const getCurrentRepositoryInfo = (): { owner: string, repo: string } => {
+  // Get the repository info from the current URL
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    
+    // Extract repo info from Lovable URLs (for development)
+    if (hostname.includes('lovable')) {
+      // This is the default owner and repo for when no better information is available
+      return { owner: 'your-github-username', repo: 'your-repository-name' };
+    }
+    
+    // For future custom domain deployments, you can add more specific logic here
+  }
+  
+  // Default to the repository owner/name used for deploying this app
+  return { owner: 'your-github-username', repo: 'your-repository-name' };
+};
+
+// Get default repository information
+const defaultRepo = getCurrentRepositoryInfo();
+const DEFAULT_OWNER = defaultRepo.owner;
+const DEFAULT_REPO = defaultRepo.repo;
 
 // Function to fetch issues from a GitHub repository
 export const fetchIssues = async (

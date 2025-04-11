@@ -9,8 +9,8 @@ interface Translations {
 
 export const translations: Translations = {
   header: {
-    en: "Issue Blogger",
-    pt: "Blog de Issues"
+    en: "My Personal Blog",
+    pt: "Meu Blog Pessoal"
   },
   search: {
     owner: {
@@ -22,8 +22,8 @@ export const translations: Translations = {
       pt: "Repositório (ex: react)"
     },
     labels: {
-      en: "Labels (comma separated)",
-      pt: "Etiquetas (separadas por vírgula)"
+      en: "Filter by labels (comma separated)",
+      pt: "Filtrar por etiquetas (separadas por vírgula)"
     },
     button: {
       en: "Search",
@@ -32,8 +32,8 @@ export const translations: Translations = {
   },
   posts: {
     title: {
-      en: "Latest Posts from",
-      pt: "Últimos Posts de"
+      en: "Blog Posts from",
+      pt: "Posts do Blog de"
     },
     loadMore: {
       en: "Load More",
