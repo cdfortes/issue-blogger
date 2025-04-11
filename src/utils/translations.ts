@@ -55,5 +55,30 @@ export const translations: Translations = {
       en: "Failed to load posts. Please try again later.",
       pt: "Falha ao carregar posts. Por favor, tente novamente mais tarde."
     }
+  },
+  accessibility: {
+    listen: {
+      en: "Listen",
+      pt: "Ouvir"
+    },
+    pause: {
+      en: "Pause",
+      pt: "Pausar"
+    },
+    stop: {
+      en: "Stop",
+      pt: "Parar"
+    },
+    translate: {
+      en: "Translate",
+      pt: "Traduzir"
+    },
+    languages: {
+      en: "English",
+      pt: "Português",
+      es: "Español",
+      fr: "Français",
+      de: "Deutsch"
+    }
   }
 };

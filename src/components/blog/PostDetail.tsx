@@ -7,7 +7,9 @@ import {
   Calendar, 
   ExternalLink, 
   Loader2, 
-  User 
+  User,
+  Globe,
+  Volume2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +18,26 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import CommentSection from "@/components/ui/CommentSection";
+import BlogAccessibilityControls from "./BlogAccessibilityControls";
+
+// Mock translation function since we can't actually use Google Translate API without credentials
+const translateText = async (text: string, targetLanguage: string) => {
+  // In a real implementation, you would call the Google Translate API
+  // This is just a mock implementation to demonstrate the UI functionality
+  
+  // Return the original text if the target language is English
+  if (targetLanguage === 'en') return text;
+  
+  // For demo purposes, we'll just add a prefix to the text
+  const languagePrefixes: {[key: string]: string} = {
+    'pt': '[Traduzido para Português] ',
+    'es': '[Traducido al Español] ',
+    'fr': '[Traduit en Français] ',
+    'de': '[Auf Deutsch übersetzt] '
+  };
+  
+  return languagePrefixes[targetLanguage] + text;
+};
 
 const PostDetail: React.FC = () => {
   const { issueNumber } = useParams<{ issueNumber: string }>();
@@ -23,7 +45,9 @@ const PostDetail: React.FC = () => {
   const [post, setPost] = useState<GitHubIssue | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [translatedContent, setTranslatedContent] = useState<string | null>(null);
+  const [currentLanguage, setCurrentLanguage] = useState<string>('en');
+  
   useEffect(() => {
     const loadPost = async () => {
       if (!issueNumber) return;
@@ -47,6 +71,25 @@ const PostDetail: React.FC = () => {
     window.scrollTo(0, 0);
   }, [issueNumber]);
 
+  const handleTranslate = async (language: string) => {
+    if (!post) return;
+    
+    setCurrentLanguage(language);
+    
+    if (language === 'en') {
+      setTranslatedContent(null); // Use original content
+      return;
+    }
+    
+    try {
+      const translated = await translateText(post.body, language);
+      setTranslatedContent(translated);
+    } catch (err) {
+      console.error('Translation error:', err);
+      // Could show a toast notification here about the translation failure
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-40">
@@ -66,6 +109,7 @@ const PostDetail: React.FC = () => {
   }
 
   const formattedDate = format(new Date(post.created_at), "MMMM d, yyyy");
+  const displayContent = translatedContent || post.body;
 
   return (
     <article className="animate-fade-in">
@@ -131,6 +175,13 @@ const PostDetail: React.FC = () => {
         )}
       </header>
       
+      {/* Accessibility Controls */}
+      <BlogAccessibilityControls 
+        content={displayContent}
+        onTranslate={handleTranslate}
+        currentLanguage={currentLanguage}
+      />
+      
       {/* Content with enhanced code blocks */}
       <div className="prose prose-slate dark:prose-invert max-w-none mb-12">
         <ReactMarkdown
@@ -181,7 +232,7 @@ const PostDetail: React.FC = () => {
             }
           }}
         >
-          {post.body}
+          {displayContent}
         </ReactMarkdown>
       </div>
       
