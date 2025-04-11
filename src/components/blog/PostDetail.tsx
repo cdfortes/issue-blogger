@@ -135,16 +135,20 @@ const PostDetail: React.FC = () => {
       <div className="prose prose-slate dark:prose-invert max-w-none mb-12">
         <ReactMarkdown
           components={{
-            code({node, inline, className, children, ...props}) {
+            code({className, children, ...props}) {
               const match = /language-(\w+)/.exec(className || '');
-              return !inline && match ? (
+              return !className?.includes('language-') ? (
+                <code className="bg-slate-200 dark:bg-slate-800 rounded px-1.5 py-0.5 text-sm font-mono" {...props}>
+                  {children}
+                </code>
+              ) : (
                 <div className="rounded-md overflow-hidden my-4">
                   <div className="bg-gray-800 text-gray-200 px-4 py-2 text-xs font-mono flex justify-between items-center border-b border-gray-700">
-                    <span>{match[1]}</span>
+                    <span>{match ? match[1] : 'code'}</span>
                     <span className="opacity-50">code</span>
                   </div>
                   <SyntaxHighlighter
-                    language={match[1]}
+                    language={match ? match[1] : ''}
                     style={vscDarkPlus}
                     customStyle={{
                       margin: 0,
@@ -157,10 +161,6 @@ const PostDetail: React.FC = () => {
                     {String(children).replace(/\n$/, '')}
                   </SyntaxHighlighter>
                 </div>
-              ) : (
-                <code className="bg-slate-200 dark:bg-slate-800 rounded px-1.5 py-0.5 text-sm font-mono" {...props}>
-                  {children}
-                </code>
               );
             },
             // Enhance blockquote styling
