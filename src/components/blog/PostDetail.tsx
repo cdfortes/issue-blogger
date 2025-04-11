@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import CommentSection from "@/components/ui/CommentSection";
 
 const PostDetail: React.FC = () => {
@@ -129,9 +131,58 @@ const PostDetail: React.FC = () => {
         )}
       </header>
       
-      {/* Content */}
-      <div className="prose prose-slate max-w-none mb-12">
-        <ReactMarkdown>{post.body}</ReactMarkdown>
+      {/* Content with enhanced code blocks */}
+      <div className="prose prose-slate dark:prose-invert max-w-none mb-12">
+        <ReactMarkdown
+          components={{
+            code({node, inline, className, children, ...props}) {
+              const match = /language-(\w+)/.exec(className || '');
+              return !inline && match ? (
+                <div className="rounded-md overflow-hidden my-4">
+                  <div className="bg-gray-800 text-gray-200 px-4 py-2 text-xs font-mono flex justify-between items-center border-b border-gray-700">
+                    <span>{match[1]}</span>
+                    <span className="opacity-50">code</span>
+                  </div>
+                  <SyntaxHighlighter
+                    language={match[1]}
+                    style={vscDarkPlus}
+                    customStyle={{
+                      margin: 0,
+                      padding: '1rem',
+                      borderRadius: '0 0 0.375rem 0.375rem',
+                    }}
+                    PreTag="div"
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
+                </div>
+              ) : (
+                <code className="bg-slate-200 dark:bg-slate-800 rounded px-1.5 py-0.5 text-sm font-mono" {...props}>
+                  {children}
+                </code>
+              );
+            },
+            // Enhance blockquote styling
+            blockquote({children}) {
+              return (
+                <blockquote className="border-l-4 border-primary/30 pl-4 italic text-gray-700 dark:text-gray-300">
+                  {children}
+                </blockquote>
+              );
+            },
+            // Enhance table styling
+            table({children}) {
+              return (
+                <div className="overflow-x-auto">
+                  <table className="border-collapse w-full">{children}</table>
+                </div>
+              );
+            }
+          }}
+        >
+          {post.body}
+        </ReactMarkdown>
       </div>
       
       {/* Comments */}
