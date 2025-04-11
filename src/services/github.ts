@@ -43,15 +43,15 @@ export const getCurrentRepositoryInfo = (): { owner: string, repo: string } => {
     
     // Extract repo info from Lovable URLs (for development)
     if (hostname.includes('lovable')) {
-      // This is the default owner and repo for when no better information is available
-      return { owner: 'your-github-username', repo: 'your-repository-name' };
+      // Using the specified owner and repo values
+      return { owner: 'cdfortes', repo: 'issue-blogger' };
     }
     
     // For future custom domain deployments, you can add more specific logic here
   }
   
   // Default to the repository owner/name used for deploying this app
-  return { owner: 'your-github-username', repo: 'your-repository-name' };
+  return { owner: 'cdfortes', repo: 'issue-blogger' };
 };
 
 // Get default repository information
